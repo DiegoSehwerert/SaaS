@@ -8,7 +8,28 @@ generator client {
 }
 
 model User {
-  id    String @id @default(uuid())
-  email String @unique
-  name  String?
+  id        String        @id @default(uuid())
+  email     String        @unique
+  name      String?
+  role      UserRole      @default(USER)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  password  UserPassword?
+
+  @@map("users")
+}
+
+model UserPassword {
+  id     String @id @default(uuid())
+  hash   String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+
+  @@map("user_passwords")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  MANAGER
 }
